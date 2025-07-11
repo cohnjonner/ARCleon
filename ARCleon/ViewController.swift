@@ -13,6 +13,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     
+    var dotNodes = [SCNNode]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +44,35 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             dotNode.position = SCNVector3(x: results.worldTransform.columns.3.x, y: results.worldTransform.columns.3.y, z: results.worldTransform.columns.3.z)
             
             sceneView.scene.rootNode.addChildNode(dotNode)
+
+            dotNodes.append(dotNode)
+            
+            if dotNodes.count >= 2{
+                calculate()
+            }
         }
+        
+        func calculate(){
+            
+            let start = dotNodes[0]
+            let end = dotNodes[1]
+            
+            var startY = start.position.y
+            var startX = start.position.x
+            var startZ = start.position.z
+            
+            var endY = end.position.y
+            var endZ = end.position.z
+            var endX = end.position.x
+            
+            var toadAlly = sqrt(pow(endX - startX,2) + pow(endY - startY,2) + pow(endX - startX,2))
+            
+            print(abs(toadAlly))
+            
+            
+        }
+        
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
