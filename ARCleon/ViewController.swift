@@ -67,9 +67,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             var toadAlly = sqrt(pow(endX - startX,2) + pow(endY - startY,2) + pow(endX - startX,2))
             
-            print(abs(toadAlly))
+            updateText(text: "\(abs(toadAlly))", atPosition: end.position)
             
             
+        }
+        
+        func updateText(text: String, atPosition: SCNVector3){
+            
+            let textGeometry = SCNText(string: text, extrusionDepth: 1.0)
+            
+            textGeometry.firstMaterial?.diffuse.contents = UIColor.red
+            
+            let textNode = SCNNode(geometry: textGeometry)
+            
+            textNode.position = SCNVector3(atPosition.x, atPosition.y + 0.01, atPosition.z)
+            
+            textNode.scale = SCNVector3(0.01,0.01,0.01)
+            
+            sceneView.scene.rootNode.addChildNode(textNode)
         }
         
         
