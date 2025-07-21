@@ -14,6 +14,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var dotNodes = [SCNNode]()
+    var textNode = SCNNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if dotNodes.count >= 2 {
+            for dot in dotNodes {
+                dot.removeFromParentNode()
+            }
+            dotNodes = [SCNNode]()
+        }
+        
+        
         if let touch = touches.first{
             let touchLocation = touch.location(in:sceneView)
             let results = sceneView.hitTest(touchLocation, types: .featurePoint)
@@ -32,6 +41,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 addDot(at:result)
             }
         }
+        
+        
         func addDot(at results :ARHitTestResult){
             let dotGeometry = SCNSphere(radius: 0.005)
             let material = SCNMaterial()
@@ -67,18 +78,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             var toadAlly = sqrt(pow(endX - startX,2) + pow(endY - startY,2) + pow(endX - startX,2))
             
-            updateText(text: "\(abs(toadAlly))", atPosition: end.position)
+            var total = abs(toadAlly)
+            
+            updateText(text: "\(abs(total))", atPosition: start.position)
             
             
         }
         
         func updateText(text: String, atPosition: SCNVector3){
             
+            textNode.removeFromParentNode()
+            
             let textGeometry = SCNText(string: text, extrusionDepth: 1.0)
             
             textGeometry.firstMaterial?.diffuse.contents = UIColor.red
             
-            let textNode = SCNNode(geometry: textGeometry)
+            textNode = SCNNode(geometry: textGeometry)
             
             textNode.position = SCNVector3(atPosition.x, atPosition.y + 0.01, atPosition.z)
             
